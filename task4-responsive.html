@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <!-- 响应式必备：让页面宽度等于设备宽度，禁止浏览器缩放时按 980px 渲染 -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>幼儿园食谱系统 - 今日食谱（响应式）</title>
+  <style>
+    /* ===== 全局重置 ===== */
+    * {
+      box-sizing: border-box;              /* 宽高含 padding 和 border，防止被撑破 */
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      /* 纵向 flex + 最小高度 100vh：内容不满一屏时，把页脚顶到页面最底部 */
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      background-color: #f8fafc;           /* 浅色背景，和导航栏蓝色主题呼应 */
+      font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+      color: #1F2937;
+    }
+
+    /* ===================================================
+       导航栏：桌面端横向一行，手机端变为纵向堆叠
+       （纵向样式写在文末的媒体查询里）
+       =================================================== */
+    .site-header {
+      height: 60px;                        /* 桌面端固定高度 60px */
+      display: flex;
+      justify-content: space-between;      /* 左中右三块分开 */
+      align-items: center;                 /* 垂直居中 */
+      padding: 0 40px;                     /* 左右内边距 40px */
+      background-color: #fff;              /* 白色背景 */
+      border-bottom: 1px solid #e5e7eb;    /* 底部 1px 分割线 */
+      box-shadow: 0 1px 4px rgba(37, 99, 235, .06);  /* 极浅阴影，增加立体感 */
+    }
+
+    /* 左侧 Logo */
+    .logo {
+      font-size: 18px;
+      font-weight: 700;
+      color: #2563EB;                      /* 主题色：蓝色 */
+      text-decoration: none;
+      transition: color 0.2s ease;         /* 平滑过渡 */
+    }
+
+    /* 中间导航链接区 */
+    .site-nav {
+      display: flex;                       /* 链接横向排列 */
+      align-items: center;
+      gap: 24px;                           /* 链接间距 24px */
+    }
+
+    .site-nav a {
+      position: relative;                  /* 为 hover 下划线定位 */
+      padding: 6px 0;                      /* 上下留出下划线空间 */
+      font-size: 15px;
+      color: #374151;
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    /* 导航链接 hover：底部出现从中间展开的圆角下划线（与 task2/3 一致） */
+    .site-nav a::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      bottom: 0;
+      width: 0;
+      height: 2px;
+      border-radius: 2px;                  /* 圆润端点，符合幼儿园风格 */
+      background-color: #2563EB;           /* 蓝色下划线 */
+      transform: translateX(-50%);
+      transition: width 0.25s ease;
+    }
+    .site-nav a:hover::after {
+      width: 100%;
+    }
+
+    /* 当前所在页：食谱 */
+    .site-nav a[aria-current="page"] {
+      color: #2563EB;
+      font-weight: 700;
+    }
+
+    /* 右侧登录按钮 */
+    .login-btn {
+      padding: 8px 20px;
+      font-size: 14px;
+      font-family: inherit;                /* 按钮继承页面字体 */
+      color: #fff;                         /* 白色文字 */
+      background-color: #2563EB;           /* 主题色：蓝色背景 */
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.2s ease, transform 0.2s ease;
+    }
+
+    .login-btn:hover {
+      background-color: #1d4ed8;           /* hover 背景加深为深蓝 */
+      transform: translateY(-2px);         /* 轻微上浮 */
+    }
+
+    /* ===== 页面主体：留白放这里，导航栏才能通栏 ===== */
+    .recipe-page {
+      flex: 1;                             /* 撑满剩余高度，把页脚压到底部 */
+      padding: 40px 20px;
+    }
+
+    /* ===== 标题区：今日食谱 + 日期 ===== */
+    .recipe-intro {
+      max-width: 1200px;                   /* 与卡片区同宽，左右对齐 */
+      margin: 0 auto 28px;
+    }
+
+    .intro-title {
+      display: flex;                       /* 让装饰条和文字垂直居中对齐 */
+      align-items: center;
+      gap: 10px;
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    /* 标题左侧的小装饰条：蓝色圆角竖条，纯装饰 */
+    .intro-title::before {
+      content: "";
+      width: 5px;
+      height: 22px;
+      border-radius: 3px;
+      background-color: #2563EB;
+    }
+
+    /* 日期：灰色小字 */
+    .intro-date {
+      margin-top: 8px;
+      margin-left: 15px;                   /* 与标题文字左对齐（装饰条 5px + 间距 10px） */
+      font-size: 13px;
+      color: #8C8478;
+    }
+
+    /* ===== 每餐一组（早餐 / 午餐 / 晚餐） ===== */
+    .meal-block {
+      max-width: 1200px;                   /* 与标题同宽 */
+      margin: 0 auto 32px;                 /* 每组之间留间距 */
+    }
+
+    /* 每餐的小标题：左对齐，加一个小 emoji 增强趣味 */
+    .meal-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 14px;
+    }
+
+    /* ===================================================
+       食谱列表：CSS Grid 响应式布局（mobile-first 写法）
+       ---------------------------------------------------
+       这里用媒体查询而不是 repeat(auto-fit, minmax(280px, 1fr))：
+       容器 1200px 时，3 列只需 3×280+2×16 = 872px 就能塞下，
+       auto-fit 会排出更多列，达不到"桌面端 3 列"的要求。
+       媒体查询才能精确控制 1 / 2 / 3 列。
+       =================================================== */
+    .recipe-list {
+      display: grid;                       /* 用 Grid 替代 Flexbox */
+      grid-template-columns: minmax(0, 1fr);   /* 手机端：1 列 */
+      gap: 16px;                           /* 卡片间距 16px */
+      max-width: 1200px;                   /* 最大宽度 1200px */
+      margin: 0 auto;                      /* 水平居中 */
+    }
+
+    /* ===== 单张食谱卡片 ===== */
+    .recipe-card {
+      display: flex;
+      flex-direction: column;              /* 卡内纵向排列：图 → 菜名 → 标签 → 描述 */
+      min-width: 0;                        /* 防止超长内容顶破网格列，避免横向滚动条 */
+      background-color: #fff;              /* 白色背景 */
+      border-radius: 12px;                 /* 圆角 12px */
+      overflow: hidden;                    /* 图片跟着圆角一起裁切 */
+      box-shadow: 0 2px 8px rgba(0, 0, 0, .08);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    /* 卡片 hover：上浮 4px + 阴影加深（与任务3保持一致） */
+    .recipe-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, .16);
+    }
+
+    /* ===== 顶部菜品图片：所有图已统一为 800×533 横图，视觉一致 ===== */
+    .recipe-img {
+      display: block;                      /* 去掉 img 行内元素的底部缝隙 */
+      width: 100%;
+      height: 160px;
+      object-fit: cover;                   /* 裁切填满，不变形 */
+      object-position: center;
+      background-color: #E5E7EB;           /* 图片未加载完时的底色 */
+    }
+
+    /* ===== 图片下方的文字区 ===== */
+    .recipe-body {
+      flex: 1;                             /* 撑满剩余高度，同一行卡片底部对齐 */
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding: 16px;
+    }
+
+    .recipe-title {
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    /* 营养标签行 */
+    .recipe-tags {
+      display: flex;
+      flex-wrap: wrap;                     /* 标签太多时换行 */
+      gap: 8px;
+    }
+
+    /* 单个标签：小胶囊（圆角、浅色背景、小字） */
+    .recipe-tag {
+      padding: 3px 10px;
+      font-size: 12px;
+      border-radius: 999px;                /* 足够大的圆角 = 胶囊形 */
+    }
+
+    /* 底部简短描述 */
+    .recipe-desc {
+      font-size: 14px;
+      line-height: 1.5;
+      color: #6B7280;
+    }
+
+    /* ===== 按餐配色：暖黄(早) / 浅蓝(午) / 清新绿(晚)，区分三餐 ===== */
+    .meal-breakfast .recipe-tag {
+      color: #B45309;
+      background-color: #FEF3C7;           /* 早餐：柔和暖黄 */
+    }
+
+    .meal-lunch .recipe-tag {
+      color: #1D4ED8;
+      background-color: #DBEAFE;           /* 午餐：浅蓝，呼应导航栏主题 */
+    }
+
+    .meal-dinner .recipe-tag {
+      color: #047857;
+      background-color: #D1FAE5;           /* 晚餐：清新浅绿 */
+    }
+
+    /* ===== 页脚 ===== */
+    .site-footer {
+      padding: 20px;
+      text-align: center;
+      font-size: 13px;
+      color: #9A9188;
+      background-color: #fff;
+      border-top: 1px solid #e5e7eb;
+    }
+
+    /* ===================================================
+       媒体查询 1：平板端（768px ~ 1023px）→ 2 列
+       =================================================== */
+    @media (min-width: 768px) {
+      .recipe-list {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    /* ===================================================
+       媒体查询 2：桌面端（≥1024px）→ 3 列
+       =================================================== */
+    @media (min-width: 1024px) {
+      .recipe-list {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    /* ===================================================
+       媒体查询 3：手机端（<768px）
+       1. 导航栏由横向改为纵向堆叠
+       2. 减少页面留白，给卡片腾出宽度
+       3. 卡片内边距和图片高度缩小
+       =================================================== */
+    @media (max-width: 767px) {
+      .site-header {
+        height: auto;                      /* 关键：固定高度必须放开，否则装不下三行 */
+        flex-direction: column;            /* 纵向堆叠 */
+        justify-content: center;
+        gap: 12px;                         /* 三块之间的竖向间距 */
+        padding: 16px 20px;                /* 左右 40px 在手机上太占地方 */
+      }
+
+      .site-nav {
+        flex-wrap: wrap;                   /* 一行放不下时换行 */
+        justify-content: center;           /* 居中排布 */
+        gap: 16px;                         /* 间距收窄 */
+      }
+
+      .recipe-page {
+        padding: 20px 12px;                /* 页面留白收窄，卡片更宽 */
+      }
+
+      .recipe-intro {
+        margin-bottom: 20px;
+      }
+
+      .intro-title {
+        font-size: 20px;                   /* 标题缩小，避免换行 */
+      }
+
+      .meal-block {
+        margin-bottom: 24px;               /* 每组间距在手机端适当收窄 */
+      }
+
+      .recipe-body {
+        padding: 12px;                     /* 卡内留白 16px → 12px */
+      }
+
+      .recipe-img {
+        height: 120px;                     /* 图片 160px → 120px */
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== 导航栏（手机端自动变纵向） ===== -->
+  <header class="site-header">
+
+    <!-- 左侧 Logo：点击回到"首页" -->
+    <a href="task2-navbar.html" class="logo">幼儿园食谱系统</a>
+
+    <!-- 中间导航链接 -->
+    <nav class="site-nav">
+      <a href="task2-navbar.html">🏠 首页</a>
+      <a href="task4-responsive.html" aria-current="page">🍲 食谱</a>
+      <a href="#">🥦 营养</a>
+      <a href="#">💬 关于</a>
+    </nav>
+
+    <!-- 右侧登录按钮 -->
+    <button type="button" class="login-btn">登录</button>
+
+  </header>
+
+  <!-- ===== 页面主体 ===== -->
+  <main class="recipe-page">
+
+    <!-- 标题区：今日食谱 + 日期 -->
+    <section class="recipe-intro">
+      <h1 class="intro-title">今日食谱</h1>
+      <p class="intro-date">2026 年 10 月 15 日 星期四 · 早午晚三餐营养均衡</p>
+    </section>
+
+    <!-- ===== 早餐 ===== -->
+    <section class="meal-block meal-breakfast">
+      <h2 class="meal-title">🌅 早餐</h2>
+      <section class="recipe-list">
+
+        <!-- 早餐 1：牛奶燕麦粥 -->
+        <article class="recipe-card">
+          <img class="recipe-img" src="images/oatmeal.jpg" alt="牛奶燕麦粥">
+          <section class="recipe-body">
+            <h3 class="recipe-title">牛奶燕麦粥</h3>
+            <section class="recipe-tags">
+              <span class="recipe-tag">高纤维</span>
+              <span class="recipe-tag">补钙</span>
+              <span class="recipe-tag">养胃</span>
+            </section>
+            <p class="recipe-desc">燕麦软糯、牛奶香浓，早上喝一碗暖胃又顶饱。</p>
+          </section>
+        </article>
+
+        <!-- 早餐 2：鸡蛋三明治 -->
+        <article class="recipe-card">
+          <img class="recipe-img" src="images/sandwich.jpg" alt="鸡蛋三明治">
+          <section class="recipe-body">
+            <h3 class="recipe-title">鸡蛋三明治</h3>
+            <section class="recipe-tags">
+              <span class="recipe-tag">高蛋白</span>
+              <span class="recipe-tag">补维C</span>
+            </section>
+            <p class="recipe-desc">嫩滑煎蛋夹进香软面包，方便又营养，孩子超喜欢。</p>
+          </section>
+        </article>
+
+        <!-- 早餐 3：蒸玉米 -->
+        <article class="recipe-card">
+          <img class="recipe-img" src="images/corn.jpg" alt="蒸玉米">
+          <section class="recipe-body">
+            <h3 class="recipe-title">蒸玉米</h3>
+            <section class="recipe-tags">
+              <span class="recipe-tag">粗粮</span>
+              <span class="recipe-tag">膳食纤维</span>
+            </section>
+            <p class="recipe-desc">清甜软糯的玉米段，粗粮营养，帮助肠胃动起来。</p>
+          </section>
+        </article>
+
+      </section>
+    </section>
+
+    <!-- ===== 午餐 ===== -->
+    <section class="meal-block meal-lunch">
+      <h2 class="meal-title">🌞 午餐</h2>
+      <section class="recipe-list">
+
+        <!-- 午餐 1：番茄炒蛋 -->
+        <article class="recipe-card">
+          <img class="recipe-img" src="images/tomato-egg.jpg" alt="番茄炒蛋">
+          <section class="recipe-body">
+            <h3 class="recipe-title">番茄炒蛋</h3>
+            <section class="recipe-tags">
+              <span class="recipe-tag">高蛋白</span>
+              <span class="recipe-tag">补维C</span>
+            </section>
+            <p class="recipe-desc">酸甜开胃，鸡蛋软嫩，是最容易让孩子接受的一道家常菜。</p>
+          </section>
+        </article>
+
+        <!-- 午餐 2：红烧肉 -->
+        <article class="recipe-card">
+          <img class="recipe-img" src="images/hongshao-rou.jpg" alt="红烧肉">
+          <section class="recipe-body">
+            <h3 class="recipe-title">红烧肉</h3>
+            <section class="recipe-tags">
+              <span class="recipe-tag">高蛋白</span>
+              <span class="recipe-tag">补铁</span>
+            </section>
+            <p class="recipe-desc">小火慢炖至软烂，肥而不腻，配上米饭小朋友能多吃半碗。</p>
+          </section>
+        </article>
+
+        <!-- 午餐 3：清炒西兰花 -->
+        <article class="recipe-card">
+          <img class="recipe-img" src="images/xilanhua.jpg" alt="清炒西兰花">
+          <section class="recipe-body">
+            <h3 class="recipe-title">清炒西兰花</h3>
+            <section class="recipe-tags">
+              <span class="recipe-tag">补钙</span>
+              <span class="recipe-tag">高纤维</span>
+            </section>
+            <p class="recipe-desc">少油快炒保留脆嫩口感，颜色翠绿，清爽解腻不挑食。</p>
+          </section>
+        </article>
+
+      </section>
+    </section>
+
+    <!-- ===== 晚餐 ===== -->
+    <section class="meal-block meal-dinner">
+      <h2 class="meal-title">🌙 晚餐</h2>
+      <section class="recipe-list">
+
+        <!-- 晚餐 1：糖醋里脊 -->
+        <article class="recipe-card">
+          <img class="recipe-img" src="images/pork.jpg" alt="糖醋里脊">
+          <section class="recipe-body">
+            <h3 class="recipe-title">糖醋里脊</h3>
+            <section class="recipe-tags">
+              <span class="recipe-tag">高蛋白</span>
+              <span class="recipe-tag">开胃</span>
+            </section>
+            <p class="recipe-desc">外酥里嫩、酸甜可口，配上米饭孩子能吃得很香。</p>
+          </section>
+        </article>
+
+        <!-- 晚餐 2：清蒸鲈鱼 -->
+        <article class="recipe-card">
+          <img class="recipe-img" src="images/fish.jpg" alt="清蒸鲈鱼">
+          <section class="recipe-body">
+            <h3 class="recipe-title">清蒸鲈鱼</h3>
+            <section class="recipe-tags">
+              <span class="recipe-tag">高蛋白</span>
+              <span class="recipe-tag">低脂</span>
+              <span class="recipe-tag">易消化</span>
+            </section>
+            <p class="recipe-desc">清蒸锁住鲜嫩，肉质细滑刺少，健康又补蛋白。</p>
+          </section>
+        </article>
+
+        <!-- 晚餐 3：凉拌黄瓜 -->
+        <article class="recipe-card">
+          <img class="recipe-img" src="images/cucumber.jpg" alt="凉拌黄瓜">
+          <section class="recipe-body">
+            <h3 class="recipe-title">凉拌黄瓜</h3>
+            <section class="recipe-tags">
+              <span class="recipe-tag">清爽</span>
+              <span class="recipe-tag">低热量</span>
+            </section>
+            <p class="recipe-desc">清脆爽口、解腻开胃，晚上吃清淡又没负担。</p>
+          </section>
+        </article>
+
+      </section>
+    </section>
+
+  </main>
+
+  <!-- ===== 页脚 ===== -->
+  <footer class="site-footer">
+    <p>幼儿园食谱系统 · 荤素搭配、营养均衡，呵护宝贝健康成长</p>
+  </footer>
+
+</body>
+</html>

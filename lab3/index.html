@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>实验三 · 食谱管理</title>
+  <style>
+    /* 全局：让页面居中、统一字体、清掉默认边距 */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+      background: #faf6ee;
+      color: #333;
+      padding: 32px 16px;
+    }
+    /* 页面主体：白色卡片，居中，最大宽度 900 */
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      background: #fff;
+      border-radius: 16px;
+      padding: 32px 40px;
+      box-shadow: 0 8px 30px rgba(0,0,0,.08);
+    }
+    h1 {
+      font-size: 26px;
+      text-align: center;
+      color: #c2410c;
+      margin-bottom: 24px;
+    }
+    /* 输入区域：横排排列 */
+    .add-row {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    #recipeName {
+      flex: 1;
+      padding: 12px 14px;
+      border: 1px solid #d0d7de;
+      border-radius: 8px;
+      font-size: 15px;
+    }
+    #recipeName:focus {
+      outline: none;
+      border-color: #ea580c;
+    }
+    #mealSelect {
+      padding: 10px 12px;
+      border: 1px solid #d0d7de;
+      border-radius: 8px;
+      font-size: 15px;
+      background: #fff;
+    }
+    #addBtn {
+      padding: 10px 22px;
+      border: none;
+      border-radius: 8px;
+      background: #ea580c;
+      color: #fff;
+      font-size: 15px;
+      cursor: pointer;
+    }
+    #addBtn:hover { background: #c2410c; }
+    /* 三餐分组：每个组一个浅色卡片 */
+    .meal-group {
+      margin-bottom: 20px;
+      border-radius: 12px;
+      padding: 16px 20px;
+      background: #fff7ed;
+    }
+    .meal-group h2 {
+      font-size: 18px;
+      color: #9a3412;
+      margin-bottom: 10px;
+    }
+    /* 列表项：菜名 + 删除按钮横排 */
+    ul { list-style: none; }
+    li {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 16px;
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      margin-bottom: 8px;
+      cursor: pointer;
+      transition: background .2s;
+    }
+    li:hover { background: #f8fafc; }
+    li button {
+      border: none;
+      background: #fee2e2;
+      color: #b91c1c;
+      padding: 4px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 13px;
+    }
+    li button:hover { background: #fecaca; }
+    /* 接口数据区域 */
+    #fetchList {
+      margin-top: 8px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+
+    <!-- ========== 步骤三：食谱管理界面（DOM交互） ========== -->
+    <h1>食谱管理</h1>
+
+    <!-- 输入区：输入框 + 餐次下拉框 + 添加按钮 -->
+    <div class="add-row">
+      <input id="recipeName" placeholder="请输入食谱名称">
+      <select id="mealSelect">
+        <option value="早餐">早餐</option>
+        <option value="午餐">午餐</option>
+        <option value="晚餐">晚餐</option>
+      </select>
+      <button id="addBtn">添加</button>
+    </div>
+
+    <!-- 三个列表：按三餐分组显示 -->
+    <div class="meal-group">
+      <h2>早餐</h2>
+      <ul id="breakfastList"></ul>
+    </div>
+    <div class="meal-group">
+      <h2>午餐</h2>
+      <ul id="lunchList"></ul>
+    </div>
+    <div class="meal-group">
+      <h2>晚餐</h2>
+      <ul id="dinnerList"></ul>
+    </div>
+
+    <!-- 步骤二：用 filter 筛选出的快手菜（时间<30分钟） -->
+    <div class="meal-group">
+      <h2>快手菜（30分钟内）</h2>
+      <ul id="quickList"></ul>
+    </div>
+
+    <!-- ========== 步骤四：异步Fetch数据展示 ========== -->
+    <div class="meal-group">
+      <h2>接口数据</h2>
+      <ul id="fetchList"></ul>
+    </div>
+
+  </div>
+
+  <!-- ========== 引入全部步骤的 JS 文件 ========== -->
+  <script src="js/basic.js"></script>     <!-- 步骤一：JS核心语法（Console输出） -->
+  <script src="js/data.js"></script>      <!-- 步骤二：数组与JSON（Console输出） -->
+  <script src="js/dom.js"></script>       <!-- 步骤三：DOM交互 -->
+  <script src="js/fetch.js"></script>     <!-- 步骤四：异步Fetch -->
+  <script src="ts/recipe.js"></script>    <!-- 步骤五：TS编译后的JS -->
+
+</body>
+</html>

@@ -1,0 +1,131 @@
+{
+  "src": "D:/web/guanyiming-portfolio/作品集.html",
+  "url": "file:///D:/web/guanyiming-portfolio/%E4%BD%9C%E5%93%81%E9%9B%86.html",
+  "outdir": "D:\\web\\guanyiming-portfolio\\_shots",
+  "include": [
+    "lint",
+    "screenshots",
+    "structure"
+  ],
+  "shots": {
+    "desktop": {
+      "screenshot": "D:\\web\\guanyiming-portfolio\\_shots\\作品集_desktop.jpg",
+      "screenshotBytes": 95606,
+      "truncated": false,
+      "structure": {
+        "title": "关一鸣 · 作品集",
+        "firstH1": "关一鸣.",
+        "viewport": {
+          "w": 1422,
+          "h": 748
+        },
+        "fullpage": {
+          "w": 1422,
+          "h": 1979
+        },
+        "counts": {
+          "section": 4,
+          "h1": 1,
+          "h2": 3,
+          "img": 3,
+          "canvas": 0,
+          "svg": 2,
+          "links": 5,
+          "buttons": 0
+        }
+      },
+      "consoleErrors": [],
+      "consoleWarnings": [],
+      "horizontalOverflow": [],
+      "resourceErrors": [],
+      "reportSource": "cdp"
+    },
+    "mobile": {
+      "screenshot": "D:\\web\\guanyiming-portfolio\\_shots\\作品集_mobile.jpg",
+      "screenshotBytes": 142967,
+      "truncated": false,
+      "structure": {
+        "title": "关一鸣 · 作品集",
+        "firstH1": "关一鸣.",
+        "viewport": {
+          "w": 500,
+          "h": 692
+        },
+        "fullpage": {
+          "w": 500,
+          "h": 2722
+        },
+        "counts": {
+          "section": 4,
+          "h1": 1,
+          "h2": 3,
+          "img": 3,
+          "canvas": 0,
+          "svg": 2,
+          "links": 5,
+          "buttons": 0
+        }
+      },
+      "consoleErrors": [],
+      "consoleWarnings": [],
+      "horizontalOverflow": [],
+      "resourceErrors": [],
+      "reportSource": "cdp"
+    }
+  },
+  "engine": "chrome_cli",
+  "chromiumExec": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+  "engineDegraded": true,
+  "engineDegradedReason": "playwright 未装",
+  "elapsedSec": 7.28,
+  "schemaVersion": 2,
+  "status": "pass",
+  "engineInfo": {
+    "name": "chrome_cli",
+    "degraded": true,
+    "degradedReasons": [
+      "playwright 未装"
+    ]
+  },
+  "input": {
+    "original": "D:/web/guanyiming-portfolio/作品集.html",
+    "resolvedPath": "D:\\web\\guanyiming-portfolio\\作品集.html",
+    "baseUrl": "file:///D:/web/guanyiming-portfolio/%E4%BD%9C%E5%93%81%E9%9B%86.html",
+    "protocol": "file",
+    "cwd": "D:\\web",
+    "mediaMode": {
+      "reducedMotion": true
+    }
+  },
+  "artifacts": {
+    "screenshots": [
+      {
+        "viewport": "desktop",
+        "path": "D:\\web\\guanyiming-portfolio\\_shots\\作品集_desktop.jpg",
+        "size": 95606,
+        "visualCoverage": {
+          "complete": true,
+          "reason": null
+        }
+      },
+      {
+        "viewport": "mobile",
+        "path": "D:\\web\\guanyiming-portfolio\\_shots\\作品集_mobile.jpg",
+        "size": 142967,
+        "visualCoverage": {
+          "complete": true,
+          "reason": null
+        }
+      }
+    ]
+  },
+  "summary": {
+    "blocker": 0,
+    "error": 0,
+    "warning": 0,
+    "info": 0
+  },
+  "findings": [],
+  "prioritizedActions": [],
+  "reportPath": "D:\\web\\guanyiming-portfolio\\_shots\\report.json"
+}
