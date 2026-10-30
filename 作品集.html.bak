@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>关一鸣 · 作品集</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='6' fill='%230e7490'/%3E%3Ctext x='12' y='16' font-size='13' font-family='sans-serif' fill='white' text-anchor='middle'%3EG%3C/text%3E%3C/svg%3E">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink: #0f172a;          /* 深墨蓝，主文字 */
+      --muted: #5b6b7c;        /* 次要文字 */
+      --deep: #0e7490;         /* 深青，主色 */
+      --deep-2: #155e75;
+      --accent: #ea580c;       /* 暖橙，强调 */
+      --bg: #f7f9fb;           /* 浅灰蓝背景 */
+      --card: #ffffff;
+      --line: #e2e8f0;
+      --radius: 16px;
+    }
+
+    body {
+      font-family: "PingFang SC", "Microsoft YaHei", "Noto Sans SC", system-ui, sans-serif;
+      background-color: var(--bg);
+      color: var(--ink);
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .wrap { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+
+    /* ===== 顶部导航 ===== */
+    header.site-nav {
+      position: sticky; top: 0; z-index: 20;
+      background: rgba(255,255,255,.92);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--line);
+    }
+    .nav-inner { display: flex; align-items: center; justify-content: space-between; height: 64px; }
+    .brand { font-weight: 700; font-size: 18px; color: var(--deep); letter-spacing: .5px; }
+    .nav-links { display: flex; gap: 28px; }
+    .nav-links a { color: var(--muted); text-decoration: none; font-size: 15px; transition: color .2s; }
+    .nav-links a:hover { color: var(--deep); }
+
+    /* ===== Hero ===== */
+    .hero { padding: 72px 0 56px; }
+    .hero-grid { display: grid; grid-template-columns: auto 1fr; gap: 40px; align-items: center; }
+    .avatar {
+      width: 132px; height: 132px; border-radius: 50%;
+      object-fit: cover; border: 4px solid #fff;
+      box-shadow: 0 12px 32px rgba(14,116,144,.18);
+    }
+    .hero-name { font-size: 40px; font-weight: 800; letter-spacing: 1px; line-height: 1.2; }
+    .hero-name .accent { color: var(--deep); }
+    .hero-role { margin-top: 10px; font-size: 18px; color: var(--deep-2); font-weight: 600; }
+    .hero-tag { margin-top: 14px; font-size: 16px; color: var(--muted); max-width: 560px; }
+    .hero-badges { margin-top: 22px; display: flex; flex-wrap: wrap; gap: 10px; }
+    .badge {
+      font-size: 13px; color: var(--deep-2); background: #e6f4f7;
+      padding: 5px 14px; border-radius: 999px; font-weight: 500;
+    }
+
+    /* ===== 章节通用 ===== */
+    section.block { padding: 48px 0; }
+    .section-label { font-size: 13px; font-weight: 700; color: var(--accent); letter-spacing: 1px; text-transform: uppercase; }
+    .section-title { font-size: 30px; font-weight: 800; margin-top: 8px; letter-spacing: .5px; }
+    .section-sub { color: var(--muted); margin-top: 10px; max-width: 620px; }
+
+    /* ===== 关于我 ===== */
+    .about-card {
+      margin-top: 28px; background: var(--card); border-radius: var(--radius);
+      padding: 36px; border: 1px solid var(--line);
+      box-shadow: 0 6px 24px rgba(15,23,42,.05);
+    }
+    .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+    .about-intro { font-size: 16px; color: var(--ink); }
+    .about-intro p + p { margin-top: 12px; }
+    .info-list { list-style: none; }
+    .info-list li { display: flex; align-items: baseline; padding: 10px 0; border-bottom: 1px dashed var(--line); font-size: 15px; }
+    .info-list li:last-child { border-bottom: none; }
+    .info-list .k { width: 88px; color: var(--muted); flex-shrink: 0; }
+
+    /* ===== 项目 ===== */
+    .works { margin-top: 32px; display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+    .work-card {
+      background: var(--card); border-radius: var(--radius); overflow: hidden;
+      border: 1px solid var(--line); text-decoration: none; color: inherit;
+      display: flex; flex-direction: column; transition: transform .25s, box-shadow .25s;
+    }
+    .work-card:hover { transform: translateY(-6px); box-shadow: 0 18px 40px rgba(15,23,42,.12); }
+    .work-media { height: 210px; overflow: hidden; position: relative; }
+    .work-media img { width: 100%; height: 100%; object-fit: cover; }
+    .work-media .tag {
+      position: absolute; top: 14px; left: 14px; background: rgba(15,23,42,.78);
+      color: #fff; font-size: 12px; padding: 4px 12px; border-radius: 999px;
+    }
+    .work-body { padding: 24px; display: flex; flex-direction: column; flex: 1; }
+    .work-title { font-size: 20px; font-weight: 700; }
+    .work-desc { margin-top: 10px; color: var(--muted); font-size: 14px; flex: 1; }
+    .work-tech { margin-top: 16px; display: flex; flex-wrap: wrap; gap: 8px; }
+    .tech { font-size: 12px; color: var(--deep-2); background: #eef6f8; padding: 4px 10px; border-radius: 6px; }
+    .work-link { margin-top: 18px; color: var(--deep); font-weight: 600; font-size: 14px; display: inline-flex; align-items: center; gap: 6px; }
+
+    /* ===== 联系 ===== */
+    .contact {
+      background: var(--ink); color: #fff; border-radius: var(--radius);
+      padding: 48px 40px; margin-top: 24px;
+    }
+    .contact-title { font-size: 26px; font-weight: 800; }
+    .contact-sub { margin-top: 8px; color: #b8c2cf; }
+    .contact-row { margin-top: 28px; display: flex; flex-wrap: wrap; gap: 36px; }
+    .contact-item { display: flex; align-items: center; gap: 10px; font-size: 16px; }
+    .contact-item svg { width: 20px; height: 20px; color: var(--accent); flex-shrink: 0; }
+
+    footer.site-foot { padding: 32px 0 44px; text-align: center; color: var(--muted); font-size: 13px; }
+
+    /* ===== 响应式 ===== */
+    @media (min-width: 768px) and (max-width: 1023px) {
+      .works { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 767px) {
+      .nav-links { display: none; }
+      .hero { padding: 48px 0 40px; }
+      .hero-grid { grid-template-columns: 1fr; gap: 24px; justify-items: center; text-align: center; }
+      .hero-tag { margin-left: auto; margin-right: auto; }
+      .hero-badges { justify-content: center; }
+      .hero-name { font-size: 32px; }
+      .about-grid { grid-template-columns: 1fr; gap: 24px; }
+      .about-card { padding: 24px; }
+      .works { grid-template-columns: 1fr; }
+      .contact { padding: 36px 24px; }
+      .contact-row { gap: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="site-nav">
+    <div class="wrap nav-inner">
+      <div class="brand">关一鸣</div>
+      <nav class="nav-links">
+        <a href="#about">关于我</a>
+        <a href="#works">项目作品</a>
+        <a href="#contact">联系方式</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ===== Hero ===== -->
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <img class="avatar" src="assets/avatar.jpg" alt="关一鸣头像">
+      <div>
+        <h1 class="hero-name">关一鸣<span class="accent">.</span></h1>
+        <div class="hero-role">地理信息科学 · 2024 级本科生</div>
+        <p class="hero-tag">正在学习 Web 前端，努力把每一个页面都做好。关注前端开发与地理信息系统方向，乐于用代码解决实际问题。</p>
+        <div class="hero-badges">
+          <span class="badge">HTML / CSS</span>
+          <span class="badge">Flexbox</span>
+          <span class="badge">CSS Grid</span>
+          <span class="badge">响应式</span>
+          <span class="badge">GIS</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 关于我 ===== -->
+  <section class="block" id="about">
+    <div class="wrap">
+      <div class="section-label">About</div>
+      <h2 class="section-title">关于我</h2>
+      <div class="about-card">
+        <div class="about-grid">
+          <div class="about-intro">
+            <p>我是关一鸣，北京林业大学地理信息科学专业 2024 级本科生。在校期间，我认真学习专业知识，也主动接触 Web 前端开发，希望把地理信息与网页开发结合起来。</p>
+            <p>我习惯借助 AI 工具辅助开发，但坚持自己审查、修改每一段代码，保证页面既符合规范、又美观实用。</p>
+          </div>
+          <ul class="info-list">
+            <li><span class="k">专业</span>地理信息科学</li>
+            <li><span class="k">年级</span>2024 级本科</li>
+            <li><span class="k">方向</span>前端开发 · GIS</li>
+            <li><span class="k">技能</span>HTML5 · CSS3 · 响应式</li>
+            <li><span class="k">AI</span>豆包 · Workbuddy</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 项目作品 ===== -->
+  <section class="block" id="works" style="padding-top:0;">
+    <div class="wrap">
+      <div class="section-label">Works</div>
+      <h2 class="section-title">项目作品</h2>
+      <p class="section-sub">两个从零完成的 Web 前端项目：一个语义化个人名片，一个面向幼儿园场景的响应式食谱系统。</p>
+
+      <div class="works">
+        <a class="work-card" href="task1-card.html">
+          <div class="work-media">
+            <img src="assets/card-avatar.jpg" alt="个人名片项目预览">
+            <span class="tag">个人项目</span>
+          </div>
+          <div class="work-body">
+            <h3 class="work-title">个人名片</h3>
+            <p class="work-desc">用 HTML5 语义化标签与盒模型制作的个人名片，包含姓名、专业、自我介绍与联系方式，暖珊瑚配色，卡片居中圆角带阴影。</p>
+            <div class="work-tech"><span class="tech">HTML5</span><span class="tech">CSS 盒模型</span><span class="tech">Flexbox</span></div>
+            <span class="work-link">查看项目 →</span>
+          </div>
+        </a>
+
+        <a class="work-card" href="task4-responsive.html">
+          <div class="work-media">
+            <img src="assets/recipe-tomato.jpg" alt="幼儿园食谱系统项目预览">
+            <span class="tag">响应式项目</span>
+          </div>
+          <div class="work-body">
+            <h3 class="work-title">幼儿园食谱系统</h3>
+            <p class="work-desc">基于 CSS Grid 与媒体查询的响应式食谱页面，桌面三列、平板两列、手机单列，按早中晚三餐展示 9 道营养菜品。</p>
+            <div class="work-tech"><span class="tech">CSS Grid</span><span class="tech">媒体查询</span><span class="tech">响应式</span></div>
+            <span class="work-link">查看项目 →</span>
+          </div>
+        </a>
+
+        <a class="work-card" href="lab3/index.html">
+          <div class="work-media">
+            <img src="images/tomato-egg.jpg" alt="食谱管理系统项目预览">
+            <span class="tag">JavaScript 项目</span>
+          </div>
+          <div class="work-body">
+            <h3 class="work-title">食谱管理系统</h3>
+            <p class="work-desc">用 DOM 操作实现食谱的增删查，Fetch 异步请求接口，TypeScript 类型标注并编译——完整的数据处理与交互管理页。</p>
+            <div class="work-tech"><span class="tech">JavaScript</span><span class="tech">DOM</span><span class="tech">Fetch</span><span class="tech">TypeScript</span></div>
+            <span class="work-link">查看项目 →</span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 联系 ===== -->
+  <section class="block" id="contact" style="padding-top:0;">
+    <div class="wrap">
+      <div class="contact">
+        <h2 class="contact-title">联系我</h2>
+        <p class="contact-sub">欢迎交流、合作或给我建议，期待与你认识。</p>
+        <div class="contact-row">
+          <div class="contact-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 6 10-6"/></svg>
+            <span>gym1212121212@bjfu.edu.cn</span>
+          </div>
+          <div class="contact-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+            <span>微信：gym1212121212</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-foot">
+    © 2026 关一鸣 · 个人作品集
+  </footer>
+
+</body>
+</html>
